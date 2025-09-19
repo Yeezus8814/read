@@ -18,7 +18,7 @@
         /* Styles for Chat Screen */
         .chat-bg {
             background-color: #e5ddd5;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2396a18e' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2396a18e' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2-H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
         #revealer-circle {
             position: absolute;
@@ -74,22 +74,12 @@
                 </div>
             </div>
             <div class="space-y-4">
-                 <h2 class="text-xl font-semibold text-gray-700 border-b pb-2">Deleted Messages</h2>
-                <div>
-                    <label for="message1" class="text-sm font-medium text-gray-700">Message 1</label>
-                    <textarea id="message1" name="message1" rows="2" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="First secret message..."></textarea>
+                <div class="flex justify-between items-center border-b pb-2">
+                    <h2 class="text-xl font-semibold text-gray-700">Deleted Messages</h2>
+                    <button type="button" id="add-message-btn" class="text-sm font-medium text-indigo-600 hover:text-indigo-800">+ Add Message</button>
                 </div>
-                 <div>
-                    <label for="message2" class="text-sm font-medium text-gray-700">Message 2</label>
-                    <textarea id="message2" name="message2" rows="2" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Second secret message..."></textarea>
-                </div>
-                 <div>
-                    <label for="message3" class="text-sm font-medium text-gray-700">Message 3</label>
-                    <textarea id="message3" name="message3" rows="2" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Third secret message..."></textarea>
-                </div>
-                 <div>
-                    <label for="message4" class="text-sm font-medium text-gray-700">Message 4</label>
-                    <textarea id="message4" name="message4" rows="2" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Fourth secret message..."></textarea>
+                <div id="message-inputs-container" class="space-y-4">
+                    <!-- Message inputs will be dynamically added here -->
                 </div>
             </div>
             <div id="error-message" class="text-red-500 text-sm text-center hidden pt-2"></div>
@@ -122,11 +112,8 @@
             <div class="bg-yellow-100 text-yellow-800 text-center text-xs p-2 rounded-lg my-3 shadow-sm">
                 <p>🔒 Messages and calls are end-to-end encrypted. No one outside of this chat, not even us, can read or listen to them. <span class="font-semibold">Learn more</span></p>
             </div>
-            <div class="space-y-2">
-                <div class="flex justify-start"><div class="message deleted-message bg-white rounded-lg p-2 max-w-xs shadow-sm" data-revealed-text=""><div class="message-content"><span class="deleted-message-text"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>This message was deleted.</span></div></div></div>
-                <div class="flex justify-start"><div class="message deleted-message bg-white rounded-lg p-2 max-w-xs shadow-sm" data-revealed-text=""><div class="message-content"><span class="deleted-message-text"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>This message was deleted.</span></div></div></div>
-                <div class="flex justify-start"><div class="message deleted-message bg-white rounded-lg p-2 max-w-xs shadow-sm" data-revealed-text=""><div class="message-content"><span class="deleted-message-text"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>This message was deleted.</span></div></div></div>
-                <div class="flex justify-start"><div class="message deleted-message bg-white rounded-lg p-2 max-w-xs shadow-sm" data-revealed-text=""><div class="message-content"><span class="deleted-message-text"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>This message was deleted.</span></div></div></div>
+            <div id="messages-container" class="space-y-2">
+                <!-- Messages will be dynamically added here -->
             </div>
         </main>
         <footer class="bg-gray-100 px-4 py-2 flex items-center gap-3 flex-shrink-0">
@@ -146,43 +133,72 @@
         const errorMessage = document.getElementById('error-message');
         const contactNameInput = document.getElementById('contactName');
         const contactPfpInput = document.getElementById('contactPfp');
-        const message1Input = document.getElementById('message1');
-        const message2Input = document.getElementById('message2');
-        const message3Input = document.getElementById('message3');
-        const message4Input = document.getElementById('message4');
+        const addMessageBtn = document.getElementById('add-message-btn');
+        const messageInputsContainer = document.getElementById('message-inputs-container');
         const backToSetupBtn = document.getElementById('back-to-setup');
 
         // --- Default Values ---
         const defaultValues = {
             name: 'Niki',
-            pfp: '',
-            msg1: 'She went back to him... again',
-            msg2: "Didn't she say she was done??",
-            msg3: "I can't keep up with her drama 🙄",
-            msg4: "It's giving zero self-respect."
+            messages: [
+                'She went back to him... again',
+                "Didn't she say she was done??",
+                "I can't keep up with her drama 🙄",
+                "It's giving zero self-respect."
+            ]
+        };
+        
+        let messageCount = 0;
+
+        // --- Functions ---
+
+        const createMessageInput = (value = '') => {
+            messageCount++;
+            const div = document.createElement('div');
+            div.className = 'flex items-center gap-2';
+            div.innerHTML = `
+                <div class="flex-grow">
+                    <label for="message${messageCount}" class="text-sm font-medium text-gray-700 sr-only">Message ${messageCount}</label>
+                    <textarea id="message${messageCount}" name="message" rows="2" class="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Secret message...">${value}</textarea>
+                </div>
+                <button type="button" class="remove-message-btn flex-shrink-0 text-red-500 hover:text-red-700">&times;</button>
+            `;
+            messageInputsContainer.appendChild(div);
+        };
+        
+        const loadDefaultStory = () => {
+            contactNameInput.value = defaultValues.name;
+            contactPfpInput.value = ''; // Clear file input
+            messageInputsContainer.innerHTML = '';
+            messageCount = 0;
+            defaultValues.messages.forEach(msg => createMessageInput(msg));
+            errorMessage.classList.add('hidden');
         };
 
         // --- Event Listeners ---
-        defaultBtn.addEventListener('click', () => {
-            contactNameInput.value = defaultValues.name;
-            contactPfpInput.value = ''; // Clear file input
-            message1Input.value = defaultValues.msg1;
-            message2Input.value = defaultValues.msg2;
-            message3Input.value = defaultValues.msg3;
-            message4Input.value = defaultValues.msg4;
-            errorMessage.classList.add('hidden');
+        document.addEventListener('DOMContentLoaded', loadDefaultStory);
+
+        addMessageBtn.addEventListener('click', () => createMessageInput());
+        
+        messageInputsContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-message-btn')) {
+                // Prevent removing the last message input
+                if (messageInputsContainer.children.length > 1) {
+                    e.target.parentElement.remove();
+                }
+            }
         });
+
+        defaultBtn.addEventListener('click', loadDefaultStory);
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             const name = contactNameInput.value.trim();
-            const msg1 = message1Input.value.trim();
-            const msg2 = message2Input.value.trim();
-            const msg3 = message3Input.value.trim();
-            const msg4 = message4Input.value.trim();
+            const messageInputs = messageInputsContainer.querySelectorAll('textarea');
+            const messages = Array.from(messageInputs).map(input => input.value.trim()).filter(Boolean);
 
-            if (!name || !msg1 || !msg2 || !msg3 || !msg4) {
-                errorMessage.textContent = 'Please fill out all fields to start the chat.';
+            if (!name || messages.length === 0) {
+                errorMessage.textContent = 'Please provide a name and at least one message.';
                 errorMessage.classList.remove('hidden');
                 return;
             }
@@ -191,12 +207,10 @@
             const file = contactPfpInput.files[0];
 
             const startChat = (pfpData) => {
-                const chatData = { name, pfp: pfpData, msg1, msg2, msg3, msg4 };
-                
+                const chatData = { name, pfp: pfpData, messages };
                 setupScreen.classList.add('hidden');
                 chatScreen.classList.remove('hidden');
                 document.body.className = 'bg-white chat-active';
-
                 populateChatScreen(chatData);
                 initializeChatLogic();
             };
@@ -217,25 +231,39 @@
             document.body.className = 'bg-gray-100';
         });
 
-        // --- Functions ---
         function populateChatScreen(chatData) {
-            const { name, pfp, msg1, msg2, msg3, msg4 } = chatData;
+            const { name, pfp, messages } = chatData;
             const chatPfp = chatScreen.querySelector('#contact-pfp');
             const chatName = chatScreen.querySelector('#contact-name');
-            const deletedMessages = chatScreen.querySelectorAll('.deleted-message');
+            const messagesContainer = chatScreen.querySelector('#messages-container');
+
+            // Clear previous messages
+            messagesContainer.innerHTML = '';
             
             chatName.textContent = name;
             chatPfp.src = pfp;
-            deletedMessages[0].dataset.revealedText = msg1;
-            deletedMessages[1].dataset.revealedText = msg2;
-            deletedMessages[2].dataset.revealedText = msg3;
-            deletedMessages[3].dataset.revealedText = msg4;
+
+            messages.forEach(msgText => {
+                const messageEl = document.createElement('div');
+                messageEl.className = 'flex justify-start';
+                messageEl.innerHTML = `
+                    <div class="message deleted-message bg-white rounded-lg p-2 max-w-xs shadow-sm" data-revealed-text="${msgText.replace(/"/g, '&quot;')}">
+                        <div class="message-content">
+                            <span class="deleted-message-text">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
+                                This message was deleted.
+                            </span>
+                        </div>
+                    </div>
+                `;
+                messagesContainer.appendChild(messageEl);
+            });
         }
 
         function initializeChatLogic() {
             const circle = chatScreen.querySelector('#revealer-circle');
             const chatContainer = chatScreen.querySelector('#chat-container');
-            const deletedMessages = chatScreen.querySelectorAll('.deleted-message');
+            const deletedMessages = chatScreen.querySelectorAll('.deleted-message'); // Re-query inside this function
             let isDragging = false;
             let offsetX, offsetY;
 
@@ -278,7 +306,8 @@
 
             const checkCollision = () => {
                 const circleRect = circle.getBoundingClientRect();
-                deletedMessages.forEach(msg => {
+                const currentDeletedMessages = chatScreen.querySelectorAll('.deleted-message');
+                currentDeletedMessages.forEach(msg => {
                     const msgRect = msg.getBoundingClientRect();
                     const msgContent = msg.querySelector('.message-content');
                     const isRevealed = msg.classList.contains('revealed');
@@ -313,4 +342,3 @@
     </script>
 </body>
 </html>
-
