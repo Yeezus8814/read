@@ -53,9 +53,9 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 p-4">
+<body class="bg-gray-100">
 
-    <div id="setup-screen" class="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-lg mx-auto">
+    <div id="setup-screen" class="w-full max-w-md p-8 my-4 sm:my-8 space-y-6 bg-white rounded-xl shadow-lg mx-auto">
         <div>
             <h1 class="text-3xl font-bold text-center text-gray-800">Create Your Chat Story</h1>
             <p class="text-center text-gray-500 mt-2">Set up the contact and the secret messages you want to reveal.</p>
@@ -102,11 +102,11 @@
 
     <!-- Chat Screen (Initially Hidden) -->
     <div id="chat-screen" class="hidden w-full h-screen bg-white overflow-hidden flex flex-col">
-        <header class="bg-gray-100 p-3 flex items-center gap-4 shadow-sm z-10 flex-shrink-0">
+        <header class="bg-gray-100 px-4 py-3 flex items-center gap-3 shadow-sm z-10 flex-shrink-0">
             <button id="back-to-setup" class="text-gray-600">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
             </button>
-            <img id="contact-pfp" src="https://placehold.co/40x40/E2E8F0/4A5568?text=..." alt="Contact profile picture" class="w-10 h-10 rounded-full">
+            <img id="contact-pfp" src="https://placehold.co/40x40/E2E8F0/4A5568?text=..." alt="Contact profile picture" class="w-10 h-10 rounded-full object-cover">
             <div class="flex-grow">
                 <h1 id="contact-name" class="font-semibold text-gray-800">Loading...</h1>
                 <p class="text-xs text-gray-500">online</p>
@@ -129,7 +129,7 @@
                 <div class="flex justify-start"><div class="message deleted-message bg-white rounded-lg p-2 max-w-xs shadow-sm" data-revealed-text=""><div class="message-content"><span class="deleted-message-text"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>This message was deleted.</span></div></div></div>
             </div>
         </main>
-        <footer class="bg-gray-100 p-3 flex items-center gap-2 flex-shrink-0">
+        <footer class="bg-gray-100 px-4 py-2 flex items-center gap-3 flex-shrink-0">
              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-600"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
             <input type="text" placeholder="Message" class="flex-grow bg-white rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-600"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.59a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
@@ -195,7 +195,7 @@
                 
                 setupScreen.classList.add('hidden');
                 chatScreen.classList.remove('hidden');
-                document.body.classList.add('chat-active');
+                document.body.className = 'bg-white chat-active';
 
                 populateChatScreen(chatData);
                 initializeChatLogic();
@@ -214,7 +214,7 @@
         backToSetupBtn.addEventListener('click', () => {
             chatScreen.classList.add('hidden');
             setupScreen.classList.remove('hidden');
-            document.body.classList.remove('chat-active');
+            document.body.className = 'bg-gray-100';
         });
 
         // --- Functions ---
