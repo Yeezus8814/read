@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup Secret Chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Lock scrolling and touch actions only when chat is active */
+        body.chat-active {
+            touch-action: none; 
+            overflow: hidden;
+        }
+        /* Styles for Chat Screen */
+        .chat-bg {
+            background-color: #e5ddd5;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2396a18e' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        #revealer-circle {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            cursor: grab;
+            z-index: 50;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.1s ease-out;
+        }
+        #revealer-circle:active {
+            cursor: grabbing;
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        .deleted-message-text {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-style: italic;
+            color: #777;
+        }
+        .message-content {
+            transition: all 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4">
+
+    <div id="setup-screen" class="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-lg mx-auto">
+        <div>
+            <h1 class="text-3xl font-bold text-center text-gray-800">Create Your Chat Story</h1>
+            <p class="text-center text-gray-500 mt-2">Set up the contact and the secret messages you want to reveal.</p>
+        </div>
+        <form id="chat-setup-form" class="space-y-6" novalidate>
+            <div class="space-y-4">
+                <h2 class="text-xl font-semibold text-gray-700 border-b pb-2">Contact Info</h2>
+                <div>
+                    <label for="contactName" class="text-sm font-medium text-gray-700">Contact Name</label>
+                    <input type="text" id="contactName" name="contactName" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., Niki">
+                </div>
+                <div>
+                    <label for="contactPfp" class="text-sm font-medium text-gray-700">Profile Picture</label>
+                    <input type="file" id="contactPfp" name="contactPfp" accept="image/*" class="mt-1 block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
+                    <p class="text-xs text-gray-500 mt-1">Or leave blank for a default initial.</p>
+                </div>
+            </div>
+            <div class="space-y-4">
+                 <h2 class="text-xl font-semibold text-gray-700 border-b pb-2">Deleted Messages</h2>
+                <div>
+                    <label for="message1" class="text-sm font-medium text-gray-700">Message 1</label>
+                    <textarea id="message1" name="message1" rows="2" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="First secret message..."></textarea>
+                </div>
+                 <div>
+                    <label for="message2" class="text-sm font-medium text-gray-700">Message 2</label>
+                    <textarea id="message2" name="message2" rows="2" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Second secret message..."></textarea>
+                </div>
+                 <div>
+                    <label for="message3" class="text-sm font-medium text-gray-700">Message 3</label>
+                    <textarea id="message3" name="message3" rows="2" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Third secret message..."></textarea>
+                </div>
+                 <div>
+                    <label for="message4" class="text-sm font-medium text-gray-700">Message 4</label>
+                    <textarea id="message4" name="message4" rows="2" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Fourth secret message..."></textarea>
+                </div>
+            </div>
+            <div id="error-message" class="text-red-500 text-sm text-center hidden pt-2"></div>
+            <div class="flex items-center gap-4 pt-4">
+                 <button type="button" id="default-btn" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">Use Default Story</button>
+                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Start Chat</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Chat Screen (Initially Hidden) -->
+    <div id="chat-screen" class="hidden w-full h-screen bg-white overflow-hidden flex flex-col">
+        <header class="bg-gray-100 p-3 flex items-center gap-4 shadow-sm z-10 flex-shrink-0">
+            <button id="back-to-setup" class="text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <img id="contact-pfp" src="https://placehold.co/40x40/E2E8F0/4A5568?text=..." alt="Contact profile picture" class="w-10 h-10 rounded-full">
+            <div class="flex-grow">
+                <h1 id="contact-name" class="font-semibold text-gray-800">Loading...</h1>
+                <p class="text-xs text-gray-500">online</p>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-600"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-600"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+        </header>
+        <main id="chat-container" class="flex-grow chat-bg p-4 overflow-y-auto relative">
+            <div id="revealer-circle"></div>
+            <div class="text-center my-2">
+                <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Today</span>
+            </div>
+            <div class="bg-yellow-100 text-yellow-800 text-center text-xs p-2 rounded-lg my-3 shadow-sm">
+                <p>🔒 Messages and calls are end-to-end encrypted. No one outside of this chat, not even us, can read or listen to them. <span class="font-semibold">Learn more</span></p>
+            </div>
+            <div class="space-y-2">
+                <div class="flex justify-start"><div class="message deleted-message bg-white rounded-lg p-2 max-w-xs shadow-sm" data-revealed-text=""><div class="message-content"><span class="deleted-message-text"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>This message was deleted.</span></div></div></div>
+                <div class="flex justify-start"><div class="message deleted-message bg-white rounded-lg p-2 max-w-xs shadow-sm" data-revealed-text=""><div class="message-content"><span class="deleted-message-text"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>This message was deleted.</span></div></div></div>
+                <div class="flex justify-start"><div class="message deleted-message bg-white rounded-lg p-2 max-w-xs shadow-sm" data-revealed-text=""><div class="message-content"><span class="deleted-message-text"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>This message was deleted.</span></div></div></div>
+                <div class="flex justify-start"><div class="message deleted-message bg-white rounded-lg p-2 max-w-xs shadow-sm" data-revealed-text=""><div class="message-content"><span class="deleted-message-text"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>This message was deleted.</span></div></div></div>
+            </div>
+        </main>
+        <footer class="bg-gray-100 p-3 flex items-center gap-2 flex-shrink-0">
+             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-600"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+            <input type="text" placeholder="Message" class="flex-grow bg-white rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-600"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.59a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-600"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg>
+        </footer>
+    </div>
+
+    <script>
+        // --- DOM Elements ---
+        const setupScreen = document.getElementById('setup-screen');
+        const chatScreen = document.getElementById('chat-screen');
+        const form = document.getElementById('chat-setup-form');
+        const defaultBtn = document.getElementById('default-btn');
+        const errorMessage = document.getElementById('error-message');
+        const contactNameInput = document.getElementById('contactName');
+        const contactPfpInput = document.getElementById('contactPfp');
+        const message1Input = document.getElementById('message1');
+        const message2Input = document.getElementById('message2');
+        const message3Input = document.getElementById('message3');
+        const message4Input = document.getElementById('message4');
+        const backToSetupBtn = document.getElementById('back-to-setup');
+
+        // --- Default Values ---
+        const defaultValues = {
+            name: 'Niki',
+            pfp: '',
+            msg1: 'She went back to him... again',
+            msg2: "Didn't she say she was done??",
+            msg3: "I can't keep up with her drama 🙄",
+            msg4: "It's giving zero self-respect."
+        };
+
+        // --- Event Listeners ---
+        defaultBtn.addEventListener('click', () => {
+            contactNameInput.value = defaultValues.name;
+            contactPfpInput.value = ''; // Clear file input
+            message1Input.value = defaultValues.msg1;
+            message2Input.value = defaultValues.msg2;
+            message3Input.value = defaultValues.msg3;
+            message4Input.value = defaultValues.msg4;
+            errorMessage.classList.add('hidden');
+        });
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = contactNameInput.value.trim();
+            const msg1 = message1Input.value.trim();
+            const msg2 = message2Input.value.trim();
+            const msg3 = message3Input.value.trim();
+            const msg4 = message4Input.value.trim();
+
+            if (!name || !msg1 || !msg2 || !msg3 || !msg4) {
+                errorMessage.textContent = 'Please fill out all fields to start the chat.';
+                errorMessage.classList.remove('hidden');
+                return;
+            }
+            errorMessage.classList.add('hidden');
+
+            const file = contactPfpInput.files[0];
+
+            const startChat = (pfpData) => {
+                const chatData = { name, pfp: pfpData, msg1, msg2, msg3, msg4 };
+                
+                setupScreen.classList.add('hidden');
+                chatScreen.classList.remove('hidden');
+                document.body.classList.add('chat-active');
+
+                populateChatScreen(chatData);
+                initializeChatLogic();
+            };
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => startChat(event.target.result);
+                reader.readAsDataURL(file);
+            } else {
+                const pfpUrl = `https://placehold.co/40x40/E2E8F0/4A5568?text=${name.charAt(0).toUpperCase()}`;
+                startChat(pfpUrl);
+            }
+        });
+        
+        backToSetupBtn.addEventListener('click', () => {
+            chatScreen.classList.add('hidden');
+            setupScreen.classList.remove('hidden');
+            document.body.classList.remove('chat-active');
+        });
+
+        // --- Functions ---
+        function populateChatScreen(chatData) {
+            const { name, pfp, msg1, msg2, msg3, msg4 } = chatData;
+            const chatPfp = chatScreen.querySelector('#contact-pfp');
+            const chatName = chatScreen.querySelector('#contact-name');
+            const deletedMessages = chatScreen.querySelectorAll('.deleted-message');
+            
+            chatName.textContent = name;
+            chatPfp.src = pfp;
+            deletedMessages[0].dataset.revealedText = msg1;
+            deletedMessages[1].dataset.revealedText = msg2;
+            deletedMessages[2].dataset.revealedText = msg3;
+            deletedMessages[3].dataset.revealedText = msg4;
+        }
+
+        function initializeChatLogic() {
+            const circle = chatScreen.querySelector('#revealer-circle');
+            const chatContainer = chatScreen.querySelector('#chat-container');
+            const deletedMessages = chatScreen.querySelectorAll('.deleted-message');
+            let isDragging = false;
+            let offsetX, offsetY;
+
+            const startDrag = (e) => {
+                isDragging = true;
+                circle.style.transition = 'none';
+                const clientX = e.clientX || e.touches[0].clientX;
+                const clientY = e.clientY || e.touches[0].clientY;
+                const circleRect = circle.getBoundingClientRect();
+                offsetX = clientX - circleRect.left;
+                offsetY = clientY - circleRect.top;
+            };
+
+            const drag = (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+                const clientX = e.clientX || e.touches[0].clientX;
+                const clientY = e.clientY || e.touches[0].clientY;
+                const containerRect = chatContainer.getBoundingClientRect();
+                let x = clientX - containerRect.left - offsetX;
+                let y = clientY - containerRect.top - offsetY;
+                x = Math.max(0, Math.min(x, chatContainer.clientWidth - circle.clientWidth));
+                y = Math.max(0, Math.min(y, chatContainer.clientHeight - circle.clientHeight));
+                circle.style.left = `${x}px`;
+                circle.style.top = `${y}px`;
+                checkCollision();
+            };
+
+            const stopDrag = () => {
+                isDragging = false;
+                circle.style.transition = 'transform 0.1s ease-out';
+            };
+
+            circle.addEventListener('mousedown', startDrag);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', stopDrag);
+            circle.addEventListener('touchstart', startDrag, { passive: true });
+            document.addEventListener('touchmove', drag, { passive: false });
+            document.addEventListener('touchend', stopDrag);
+
+            const checkCollision = () => {
+                const circleRect = circle.getBoundingClientRect();
+                deletedMessages.forEach(msg => {
+                    const msgRect = msg.getBoundingClientRect();
+                    const msgContent = msg.querySelector('.message-content');
+                    const isRevealed = msg.classList.contains('revealed');
+                    const intersects = !(circleRect.right < msgRect.left || circleRect.left > msgRect.right || circleRect.bottom < msgRect.top || circleRect.top > msgRect.bottom);
+                    if (intersects && !isRevealed) {
+                        revealMessage(msg, msgContent);
+                    } else if (!intersects && isRevealed) {
+                        hideMessage(msg, msgContent);
+                    }
+                });
+            };
+
+            const revealMessage = (msg, msgContent) => {
+                msg.classList.add('revealed');
+                const revealedText = msg.dataset.revealedText;
+                msgContent.style.transform = 'rotateX(90deg)';
+                setTimeout(() => {
+                    msgContent.innerHTML = `<span class="text-gray-800">${revealedText}</span>`;
+                    msgContent.style.transform = 'rotateX(0deg)';
+                }, 100);
+            };
+
+            const hideMessage = (msg, msgContent) => {
+                msg.classList.remove('revealed');
+                msgContent.style.transform = 'rotateX(-90deg)';
+                setTimeout(() => {
+                     msgContent.innerHTML = `<span class="deleted-message-text"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>This message was deleted.</span>`;
+                    msgContent.style.transform = 'rotateX(0deg)';
+                }, 100);
+            };
+        }
+    </script>
+</body>
+</html>
+
